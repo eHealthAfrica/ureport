@@ -39,11 +39,11 @@ STATICFILES_FINDERS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ureport',
-        'USER': 'ureport',
-        'PASSWORD': 'nyaruka',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': os.environ.get('DBNAME', 'ureport'),
+        'USER': os.environ.get('DBUSER', 'ureport'),
+        'PASSWORD': os.environ.get('DBPASS', 'nyaruka'),
+        'HOST': os.environ.get('DBHOST', 'localhost'),
+        'PORT': os.environ.get('DBPORT', ''),
         'ATOMIC_REQUESTS': True,
         'OPTIONS': {
         }

@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import sys
+import os
 from django.utils.translation import ugettext_lazy as _
 from hamlpy import templatize
 
@@ -38,9 +39,9 @@ DEFAULT_FROM_EMAIL = 'server@nyaruka.com'
 EMAIL_HOST_PASSWORD = 'NOTREAL'
 EMAIL_USE_TLS = True
 
-EMPTY_SUBDOMAIN_HOST = 'http://localhost:8000'
-API_ENDPOINT = 'http://localhost:8001'
-HOSTNAME = 'localhost:8000'
+EMPTY_SUBDOMAIN_HOST = os.environ.get('EMPTYSUBDOMAINHOST', 'http://localhost:8000')
+API_ENDPOINT = os.environ.get('APIENDPOINT', 'http://localhost:8001')
+HOSTNAME = os.environ.get('HOSTNAME', 'localhost:8000')
 SITE_CHOOSER_TEMPLATE = 'public/org_chooser.haml'
 SITE_CHOOSER_URL_NAME = 'public.home'
 
@@ -88,7 +89,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.environ.get('STATIC_DIR', '')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -129,7 +130,7 @@ TEMPLATE_LOADERS = (
     'hamlpy.template.loaders.HamlPyAppDirectoriesLoader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    
+
 #     'django.template.loaders.eggs.Loader',
 )
 
@@ -139,7 +140,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
-    'django.core.context_processors.static',    
+    'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
     'dash.orgs.context_processors.user_group_perms_processor',
@@ -165,7 +166,7 @@ ROOT_URLCONF = 'ureport.urls'
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.cache.RedisCache',
-        'LOCATION': '127.0.0.1:6379:1',
+        'LOCATION': os.environ.get('REDISHOST', '127.0.0.1') + ":6379:1",
         'OPTIONS': {
             'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
         }
@@ -214,6 +215,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_extensions',
 
 
     # mo-betta permission management
@@ -316,7 +318,7 @@ FIXTURE_DIRS = (os.path.join(PROJECT_DIR, '../fixtures'),)
 TESTFILES_DIR = os.path.join(PROJECT_DIR, '../testfiles')
 TEMPLATE_DIRS = (os.path.join(PROJECT_DIR, '../templates'),)
 STATICFILES_DIRS = (os.path.join(PROJECT_DIR, '../static'), os.path.join(PROJECT_DIR, '../media'), )
-STATIC_ROOT = os.path.join(PROJECT_DIR, '../sitestatic')
+STATIC_ROOT = os.environ.get('STATIC_DIR', os.path.join(PROJECT_DIR, '../sitestatic'))
 MEDIA_ROOT = os.path.join(PROJECT_DIR, '../media')
 MEDIA_URL = "/media/"
 
@@ -418,7 +420,7 @@ BROKER_TRANSPORT_OPTIONS = {'socket_timeout': 5}
 CELERY_RESULT_BACKEND = 'djcelery.backends.cache:CacheBackend'
 
 BROKER_BACKEND = 'redis'
-BROKER_HOST = 'localhost'
+BROKER_HOST = os.environ.get('REDISHOST', 'localhost')
 BROKER_PORT = 6379
 BROKER_VHOST = '1'
 

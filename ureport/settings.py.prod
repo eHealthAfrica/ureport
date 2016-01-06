@@ -150,7 +150,7 @@ COMPRESS_CSS_HASHING_METHOD = 'content'
 COMPRESS_OFFLINE = True
 COMPRESS_OFFLINE_CONTEXT = dict(STATIC_URL=STATIC_URL, base_template='frame.html', debug=False, testing=False)
 
-REDIS_HOST = 'redis-internal.ureport.in'
+REDIS_HOST = os.environ.get('REDISHOST', 'redis-internal.ureport.in')
 BROKER_HOST = REDIS_HOST
 
 CACHES = {

@@ -1,0 +1,25 @@
+db:
+    image: "postgres:9.4"
+
+redis:
+    image: "redis"
+
+ureport:
+  build: .
+  volumes:
+      - ./:/code
+  environment:
+      DBHOST: "db"
+      DBUSER: "postgres"
+      DBPASS: ""
+      DBPORT: ""
+      REDISHOST: "redis"
+      STATIC_DIR: "/var/www/static/"
+      HOSTNAME: "nathan-humphreys-dev.eocng.org"
+  command: entrypoint.sh start 
+  ports:
+    - "4000:5000"
+    - "8000:8000"
+  links:
+    - db
+    - redis
