@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from mock import patch
 import pytz
+import os
 from ureport.contacts.models import ContactField, Contact, ReportersCounter
 from ureport.contacts.tasks import fetch_contacts_task
 from ureport.locations.models import Boundary
@@ -258,8 +259,9 @@ class ContactTest(DashTest):
     @patch('dash.orgs.models.TembaClient1', MockTembaClient)
     def test_tasks(self):
 
+        redis_host = os.environ.get("REDISHOST", "127.0.0.1")
         with self.settings(CACHES={'default': {'BACKEND': 'redis_cache.cache.RedisCache',
-                                               'LOCATION': '127.0.0.1:6379:1',
+                                               'LOCATION': redis_host + ':6379:1',
                                                'OPTIONS': {'CLIENT_CLASS': 'redis_cache.client.DefaultClient'}
                                                }}):
             with patch('ureport.contacts.tasks.Contact.fetch_contacts') as mock_fetch_contacts:

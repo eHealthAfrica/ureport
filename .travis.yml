@@ -29,7 +29,7 @@ install:
   - pip install -r pip-deploy.txt
 
 before_script:
-  - ln -s $TRAVIS_BUILD_DIR/ureport/settings.py.postgres $TRAVIS_BUILD_DIR/ureport/settings.py
+  - cd $TRAVIS_BUILD_DIR/ureport && ln -s settings.py.postgres settings.py
   - fab -f fabdeployfile.py stage prebuild
   - docker-compose up -d ureportdb
   - docker-compose up -d ureportredis

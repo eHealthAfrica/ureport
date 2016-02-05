@@ -1,4 +1,5 @@
 import json
+import os
 
 from datetime import timedelta, datetime
 
@@ -1013,8 +1014,9 @@ class PollQuestionTest(DashTest):
 
         self.poll = self.create_poll(self.org, "Poll 1", "uuid-1", self.education, self.admin)
 
+        redis_host = os.environ.get("REDISHOST", "127.0.0.1")
         with self.settings(CACHES={'default': {'BACKEND': 'redis_cache.cache.RedisCache',
-                                               'LOCATION': '127.0.0.1:6379:1',
+                                               'LOCATION': redis_host + ':6379:1',
                                                'OPTIONS': {'CLIENT_CLASS': 'redis_cache.client.DefaultClient'}
                                                }}):
 

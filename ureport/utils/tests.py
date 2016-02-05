@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 import json
 from dash.categories.models import Category
@@ -37,7 +38,8 @@ class UtilsTest(DashTest):
 
     def clear_cache(self):
         # hardcoded to localhost
-        r = redis.StrictRedis(host='localhost', db=1)
+        redis_host = os.environ.get("REDISHOST", "localhost")
+        r = redis.StrictRedis(host=redis_host, db=1)
         r.flushdb()
 
     def test_datetime_to_json_date(self):
@@ -409,8 +411,9 @@ class UtilsTest(DashTest):
                                                 ])])
 
     def test_fetch_poll_results(self):
+        redis_host = os.environ.get("REDISHOST", "127.0.0.1")
         with self.settings(CACHES = {'default': {'BACKEND': 'redis_cache.cache.RedisCache',
-                                                 'LOCATION': '127.0.0.1:6379:1',
+                                                 'LOCATION': redis_host + ':6379:1',
                                                  'OPTIONS': {
                                                      'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
                                                  }
@@ -663,8 +666,9 @@ class UtilsTest(DashTest):
         self.assertEqual(get_reporters_count(self.org), 5)
 
     def test_get_global_count(self):
+        redis_host = os.environ.get("REDISHOST", "127.0.0.1")
         with self.settings(CACHES = {'default': {'BACKEND': 'redis_cache.cache.RedisCache',
-                                                 'LOCATION': '127.0.0.1:6379:1',
+                                                 'LOCATION': redis_host + ':6379:1',
                                                  'OPTIONS': {
                                                      'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
                                                  }
