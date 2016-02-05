@@ -3,7 +3,7 @@ from django.conf.urls import include, patterns, url
 from django.views.decorators.cache import cache_page
 from .views import IndexView, NewsView, AboutView, PollsView, PollReadView, PollQuestionResultsView, JobsView
 from .views import BoundaryView, UreportersView, StoriesView, StoryReadView, JoinEngageView, ReportersResultsView
-from .views import CountriesView, Chooser, AdditionalMenu
+from .views import CountriesView, Chooser, AdditionalMenu, AWSHealth
 
 urlpatterns = patterns('',
     (r'^home/$', Chooser.as_view(), {}, 'public.home'),
@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     (r'^jobs/$', JobsView.as_view(), {}, 'public.jobs'),
     (r'^countries/$', CountriesView.as_view(), {}, 'public.countries'),
     (r'^added/$', AdditionalMenu.as_view(), {}, 'public.added'),
+    (r'^health/$', AWSHealth.as_view(), {}, 'public.aws_health'),
 
 
 )

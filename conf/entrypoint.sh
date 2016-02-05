@@ -7,8 +7,19 @@ show_help() {
     echo """
     Commands
     manage     : Invoke django manage.py commands
-    setupdb  : Create empty database for ureport, will still need migrations run
+    setuplocaldb  : Create empty database for ureport, will still need migrations run
     """
+}
+
+setup_local_db() {
+    cd /code
+    python manage.py sqlcreate | psql -U $RDS_USERNAME -h $RDS_HOSTNAME
+    python manage.py migrate
+}
+
+setup_prod_db() {
+    cd /code
+    python manage.py migrate
 }
 
 case "$1" in
@@ -16,17 +27,24 @@ case "$1" in
         cd /code/
         python manage.py "${@:2}"
     ;;
-    setupdb )
-        set +e
-        cd /code/
-        python manage.py sqlcreate | psql -U postgres -h db
-        python manage.py migrate
+    setuplocaldb )
+        setup_local_db
+    ;;
+    setupproddb )
+        setup_prod_db
     ;;
     start )
         cd /code
         python manage.py collectstatic --noinput
         /usr/local/bin/supervisord -c /etc/supervisor/supervisord.conf
         nginx -g "daemon off;"
+    ;;
+    test)
+      cd /code
+      coverage run --source="." manage.py test ureport ureport/admins ureport/assets ureport/contacts ureport/countries ureport/jobs ureport/locations ureport/news ureport/polls ureport/public ureport/utils --verbosity=2 --noinput
+    ;;
+    bash )
+        bash
     ;;
     *)
         show_help

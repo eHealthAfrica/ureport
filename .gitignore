@@ -85,3 +85,8 @@ country-list/
 # celery
 celerybeat.pid
 celerybeat-schedule
+
+# Deploy
+conf/Dockerrun.aws.json
+conf/nginx.ureport.conf
+conf/deploy.zip

@@ -1,24 +1,44 @@
 language: python
+
 python:
-- '2.7'
+  - '2.7'
+
 services:
-- redis-server
+  - redis-server
+  - docker
+
 addons:
   postgresql: '9.3'
+
 sudo: false
+
 cache:
   directories:
-  - $HOME/.cache/pip
+    - $HOME/.cache/pip
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.5.2
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
 install:
-- pip install --upgrade pip
-- pip install -r pip-freeze.txt --upgrade
-- pip install coveralls
+  - pip install -r pip-deploy.txt
+
 before_script:
-- psql -U postgres -c "CREATE USER ureport WITH PASSWORD 'nyaruka';"
-- psql -U postgres -c "ALTER ROLE ureport WITH SUPERUSER;"
-- psql -U ureport postgres -c "CREATE DATABASE ureport;"
-- ln -s $TRAVIS_BUILD_DIR/ureport/settings.py.postgres $TRAVIS_BUILD_DIR/ureport/settings.py
+  - ln -s $TRAVIS_BUILD_DIR/ureport/settings.py.postgres $TRAVIS_BUILD_DIR/ureport/settings.py
+  - fab -f fabdeployfile.py stage prebuild
+  - docker-compose up -d ureportdb
+  - docker-compose up -d ureportredis
+  - docker-compose build ureport
+  - docker-compose run ureport setuplocaldb
+
 script:
-- coverage run --source="." manage.py test ureport ureport/admins ureport/assets ureport/contacts ureport/countries ureport/jobs ureport/locations ureport/news ureport/polls ureport/public ureport/utils --verbosity=2 --noinput
+  - docker-compose run ureport test
+
 after_success:
-- coveralls
+  - coveralls
+  - ./travis_deploy.sh

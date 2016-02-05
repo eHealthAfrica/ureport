@@ -381,3 +381,13 @@ class CountriesView(SmartTemplateView):
             json_dict['text'] = whole_text
 
         return HttpResponse(json.dumps(json_dict), status=200, content_type='application/json')
+
+
+class AWSHealth(View):
+
+    """
+    AWS Health Endpoint
+    """
+
+    def get(self, *args, **kwargs):
+        return HttpResponse(status=200)
