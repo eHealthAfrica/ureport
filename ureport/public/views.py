@@ -49,9 +49,7 @@ class IndexView(SmartTemplateView):
         news = NewsItem.objects.filter(is_active=True, org=org).order_by('-created_on')
         context['news'] = news.count() > 0
 
-        # we use gender label to estimate the most active region
-        if org.get_config('gender_label'):
-            context['most_active_regions'] = org.get_most_active_regions()
+        context['most_active_regions'] = org.get_regions_stats()
 
         # global counter
         if org.get_config('is_global'):
@@ -210,10 +208,9 @@ class BoundaryView(SmartTemplateView):
         if org.get_config('is_global'):
             location_boundaries = org.boundaries.filter(level=0)
         else:
-            state_id = self.kwargs.get('osm_id', None)
-
-            if state_id:
-                location_boundaries = org.boundaries.filter(level=2, parent__osm_id=state_id)
+            parent_id = self.kwargs.get('osm_id', None)
+            if parent_id:
+                location_boundaries = org.boundaries.filter(parent__osm_id=parent_id)
             else:
                 location_boundaries = org.boundaries.filter(level=1)
 

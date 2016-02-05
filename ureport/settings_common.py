@@ -42,6 +42,7 @@ EMAIL_USE_TLS = True
 EMPTY_SUBDOMAIN_HOST = os.environ.get('EMPTYSUBDOMAINHOST', 'http://localhost:8000')
 API_ENDPOINT = os.environ.get('APIENDPOINT', 'http://localhost:8001')
 HOSTNAME = os.environ.get('HOSTNAME', 'localhost:8000')
+
 SITE_CHOOSER_TEMPLATE = 'public/org_chooser.haml'
 SITE_CHOOSER_URL_NAME = 'public.home'
 
@@ -201,6 +202,7 @@ ORG_CONFIG_FIELDS =[ dict(name='is_on_landing_page', field=dict(help_text=_("Whe
                      dict(name='registration_label', field=dict(help_text=_("The label of the Contact Field that contains the registration date of reporters")), superuser_only=True),
                      dict(name='state_label', field=dict(help_text=_("The label of the Contact Field that contains the State of reporters")), superuser_only=True),
                      dict(name='district_label', field=dict(help_text=_("The label of the Contact Field that contains the District of reporters"), required=False), superuser_only=True),
+                     dict(name='ward_label', field=dict(help_text=_("The label of the Contact Field that contains the Ward of reporters"), required=False), superuser_only=True),
                      dict(name='male_label', field=dict(help_text=_("The label assigned to U-Reporters that are Male.")), superuser_only=True),
                      dict(name='female_label', field=dict(help_text=_("The label assigned to U-Reporters that are Female.")), superuser_only=True),
                      dict(name='has_jobs', field=dict(help_text=_("If there are jobs to be shown on the public site"), required=False)),
