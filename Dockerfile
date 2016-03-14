@@ -22,23 +22,23 @@ RUN pip install --upgrade pip
 RUN pip install -r /tmp/requirements.txt  
 RUN pip install coveralls
 
-WORKDIR /code
-
-ADD ./ /code/
-
 RUN mkdir -p /var/log/ureport
 
 ADD conf/entrypoint.sh /usr/local/bin/entrypoint.sh 
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 RUN mkdir -p /etc/supervisor/conf.d && mkdir -p /var/log/supervisor
-RUN ln -sf /code/conf/supervisor.ureport.conf /etc/supervisor/conf.d/ureport.conf
-RUN ln -sf /code/conf/supervisord.conf /etc/supervisor/supervisord.conf
-RUN ln -sf /usr/bin/nodejs /usr/bin/node
 
 ADD conf/nginx.ureport.conf /etc/nginx/sites-enabled/default
 
+WORKDIR /code
 RUN mkdir -p /var/www/static && chmod -R 760 /var/www/static/ && chown -R www-data:www-data /var/www/static
+
+ADD ./ /code/
+
+RUN ln -sf /code/conf/supervisor.ureport.conf /etc/supervisor/conf.d/ureport.conf
+RUN ln -sf /code/conf/supervisord.conf /etc/supervisor/supervisord.conf
+RUN ln -sf /usr/bin/nodejs /usr/bin/node
 
 EXPOSE 8000
 
