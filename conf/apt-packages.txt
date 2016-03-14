@@ -15,7 +15,6 @@ libxslt1-dev
 libncurses5-dev
 libjpeg-dev
 gdal-bin
-uwsgi
-uwsgi-plugin-python
 nginx
 npm
+supervisor

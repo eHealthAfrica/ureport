@@ -2,16 +2,15 @@
 from settings_common import *
 import os
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 COMPRESS_ENABLED = True
 
-
-EMPTY_SUBDOMAIN_HOST = 'http://ureport.in'
-HOSTNAME = 'ureport.in'
-ALLOWED_HOSTS = ['*']
-SESSION_COOKIE_DOMAIN = 'ureport.in'
-SESSION_COOKIE_SECURE = True
+EMPTY_SUBDOMAIN_HOST = 'http://' + os.environ.get('HOSTNAME', 'nigeria.ureport.staging.nyaruka.com')
+HOSTNAME = os.environ.get('HOSTNAME', 'ureport.staging.nyaruka.com')
+ALLOWED_HOSTS = ['.eocng.org', '.nyaruka.com', '.ureport.in']
+SESSION_COOKIE_DOMAIN = os.environ.get('HOSTNAME', 'ureport.staging.nyaruka.com')
+SESSION_COOKIE_SECURE = False
 
 # these guys will get email from sentry
 ADMINS = (
@@ -30,16 +29,21 @@ MANAGERS = ADMINS
 # add gunicorn
 INSTALLED_APPS = INSTALLED_APPS + ('gunicorn', 'raven.contrib.django.raven_compat',)
 
-# Set your DSN value
 RAVEN_CONFIG = {
     'dsn': os.environ.get('RAVEN_DSN', 'MISSING_RAVEN_DSN')
 }
+
+# static dir is different for staging
+STATIC_URL = '/sitestatic/'
+COMPRESS_URL = '/sitestatic/'
+
+# our media is all on S3
+MEDIA_URL = 'http://dl-ureport.s3.amazonaws.com/'
 
 # we store files on S3 on prod boxes
 AWS_ACCESS_KEY_ID=os.environ.get('AWS_ACCESS_KEY_ID', 'MISSING_AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY=os.environ.get('AWS_SECRET_ACCESS_KEY', 'MISSING_AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME='dl-ureport'
-AWS_S3_SECURE_URLS = False
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 # these two settings will cause our aws files to never expire
@@ -49,13 +53,6 @@ AWS_HEADERS = {
 'Expires': 'Wed, 1 Jan 2020 20:00:00 GMT',
 'Cache-Control': 'max-age=86400',
 }
-
-# static dir is different for prod
-STATIC_URL = '/sitestatic/'
-COMPRESS_URL = '/sitestatic/'
-
-# our media is all on S3
-MEDIA_URL = 'http://dl-ureport.s3.amazonaws.com/'
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -70,11 +67,14 @@ SITE_API_HOST = 'https://api.rapidpro.io'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('RDS_DB_NAME'),
-        'USER': os.environ.get('RDS_USERNAME'),
-        'PASSWORD': os.environ.get('RDS_PASSWORD'),
-        'HOST': os.environ.get('RDS_HOSTNAME'),
-        'PORT': os.environ.get('RDS_PORT')
+        'NAME': os.environ.get('DBNAME', 'ureport_staging'),
+        'USER': os.environ.get('DBUSER', 'ureport'),
+        'PASSWORD': os.environ.get('DBPASS', 'nyarukaglue'),
+        'HOST': os.environ.get('DBHOST', 'localhost'),
+        'PORT': os.environ.get('DBPORT', '5432'),
+        'CONN_MAX_AGE': 60,
+        'OPTIONS': {
+        }
     }
 }
 
@@ -131,6 +131,11 @@ LOGGING = {
             'handlers': ['console', 'error_file'],
             'propagate': False,
         },
+        'django.requests': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'error_file'],
+            'propagate': False,
+        },
         'django.db.backends': {
             'level': 'ERROR',
             'handlers': ['console', 'error_file'],
@@ -162,11 +167,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'HTTPS')
 
 # compress arguments
 COMPRESS_CSS_HASHING_METHOD = 'content'
-COMPRESS_OFFLINE = True
+COMPRESS_OFFLINE = False
 COMPRESS_OFFLINE_CONTEXT = dict(STATIC_URL=STATIC_URL, base_template='frame.html', debug=False, testing=False)
 
-REDIS_HOST = os.environ.get('REDISHOST', 'redis-internal.ureport.in')
-BROKER_HOST = REDIS_HOST
+REDIS_HOST = os.environ.get('REDISHOST', 'localhost')
 
 CACHES = {
     'default': {

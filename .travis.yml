@@ -30,7 +30,7 @@ install:
 
 before_script:
   - cd $TRAVIS_BUILD_DIR/ureport && ln -s settings.py.postgres settings.py && cd -
-  - fab -f fabdeployfile.py stage prebuild
+  - fab stage create_nginx_config
   - docker-compose up -d ureportdb
   - docker-compose up -d ureportredis
   - docker-compose build ureport

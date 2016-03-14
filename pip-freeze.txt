@@ -58,5 +58,6 @@ wheel==0.24.0
 xlrd==0.9.3
 xlutils==1.7.1
 xlwt==1.0.0
-supervisor==3.2
 django-extensions==1.5.9
+coveralls==1.1
+uwsgi==2.0.12

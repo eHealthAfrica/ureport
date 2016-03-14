@@ -1,5 +1,7 @@
 ureportdb:
-    image: "postgres:9.4"
+  image: "postgres:9.4"
+  environment:
+      POSTGRES_DB: "ureport"
 
 ureportredis:
     image: "redis"
@@ -9,18 +11,18 @@ ureport:
   volumes:
       - ./:/code
   environment:
+      ENV: "local"
       RDS_HOSTNAME: "ureportdb"
       RDS_USERNAME: "postgres"
       RDS_PASSWORD: ""
-      RDS_PORT: ""
+      RDS_PORT: "5432"
       RDS_DB_NAME: "ureport"
       REDISHOST: "ureportredis"
       STATIC_DIR: "/var/www/static/"
       HOSTNAME: "ureport-local.eocng.org"
   command: start 
   ports:
-    - "4000:5000"
-    - "8000:8000"
+    - "80:80"
   links:
     - ureportdb
     - ureportredis
