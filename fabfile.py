@@ -29,7 +29,11 @@ def create_nginx_config():
 def create_dockerrun_file():
     template = template_env.get_template(env.dockerrun_template)
     with open(env.dockerrun_file_path, "w") as file_handle:
-        data = template.render(tag=env.tag)
+        context = {
+            "tag": env.tag,
+            "environment": env.environment
+        }
+        data = template.render(**context)
         file_handle.write(data)
     notify("Create Dockerrun.aws.json with tag %s" % env.tag)
 

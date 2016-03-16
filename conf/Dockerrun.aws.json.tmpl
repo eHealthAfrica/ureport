@@ -9,10 +9,14 @@
       "portMappings": [
         {
           "hostPort": 80,
-          "containerPort": 4000
+          "containerPort": 80
         }
       ],
       "environment": [
+        {
+          "name": "ENV",
+          "value": "{{ environment }}"
+        },
         {
           "name": "STATIC_DIR",
           "value": "/var/www/static"

@@ -5,15 +5,15 @@ env.project_code = "ureport"
 env.require_tag = True
 
 
-def _configure(build_name):
-    env.build_name = build_name
+def _configure(environment):
+    env.environment = environment
     env.config_dir = "conf"
     env.nginx_file_name = "nginx.ureport.conf"
     env.nginx_file_path = os.path.join(env.config_dir, env.nginx_file_name)
     env.nginx_template = "%(nginx_file_name)s.tmpl" % env
     env.supervisor_file_path = os.path.join(
         env.config_dir, "supervisor.ureport.conf")
-    env.hostname = "ureport-%(build_name)s.elasticbeanstalk.com" % env
+    env.hostname = "ureport-%(environment)s.elasticbeanstalk.com" % env
     env.tag = os.environ.get("TRAVIS_TAG", "latest")
 
     env.eb_extensions_dir = ".ebextensions/"
