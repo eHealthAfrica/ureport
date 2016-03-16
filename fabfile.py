@@ -3,11 +3,11 @@ import zipfile
 
 from fabric.colors import green
 from fabric.api import local
-from fabdeployconfig import env, dev, stage  # noqa
+from fabconfig import env, dev, stage  # noqa
 
 from jinja2 import Environment, FileSystemLoader
 
-loader = FileSystemLoader(env.config_dir, followlinks=True)
+loader = FileSystemLoader("conf", followlinks=True)
 template_env = Environment(loader=loader)
 
 
