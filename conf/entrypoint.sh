@@ -36,8 +36,8 @@ case "$1" in
     start )
         cd /code
         ln -sf /code/ureport/settings.py.${ENV} /code/ureport/settings.py
-        python manage.py collectstatic --noinput &
-        /usr/bin/supervisord -c /etc/supervisor/supervisord.conf -n
+        python manage.py collectstatic --noinput
+        /usr/local/bin/supervisord -c /etc/supervisord.conf -n
     ;;
     test)
       cd /code

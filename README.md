@@ -9,7 +9,7 @@ This is the U-report dashboard built on data collected by RapidPro.
 
 Built for UNICEF by Nyaruka - http://nyaruka.com
 
-## Getting Started
+## Getting Started with docker ##
 
 ### Install docker-compose ###
 
@@ -59,8 +59,40 @@ awsebcli so we create a separate virtualenv for each.
     source ~/virtualenvs/deploy/bin/activate
     pip install -r pip-deploy.txt
 
-To deploy to stage:
+To prepare a deploy:
 
-    fab stage deploy
+    fab -f eb_deploy.py <env> prepare_deploy
+
+
+To perform a deploy:
+
+     eb deploy <env>
+
+## Getting started without docker ##
+
+Install dependencies
+```
+% virtualenv env
+% source env/bin/activate
+% pip install -r pip-requires.txt
+```
+
+Link up a settings file (you'll need to create the postgres db first, username: 'ureport' password: 'nyaruka')
+```
+% ln -s ureport/settings.py.postgres ureport/settings.py
+```
+
+Sync the database, add all our models and create our superuser
+```
+% python manage.py syncdb
+% python manage.py migrate
+% python manage createsuper
+```
+
+At this point everything should be good to go, you can start with:
+
+```
+% python manage.py runserver
+```
 
 Note that the endpoint called for API calls is by default 'localhost:8001', you can uncomment the RAPIDPRO_API line in settings.py.postgres to go against production servers.

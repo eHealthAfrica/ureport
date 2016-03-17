@@ -67,16 +67,12 @@ STATICFILES_FINDERS = (
 
 SITE_API_HOST = 'https://api.rapidpro.io'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('RDS_DB_NAME'),
-        'USER': os.environ.get('RDS_USERNAME'),
-        'PASSWORD': os.environ.get('RDS_PASSWORD'),
-        'HOST': os.environ.get('RDS_HOSTNAME'),
-        'PORT': os.environ.get('RDS_PORT')
-    }
-}
+
+import dj_database_url
+DATABASES['default'] = dj_database_url.config()
+
+# reuse our connections for up to 60 seconds
+DATABASES['default']['CONN_MAX_AGE'] = 60
 
 # no debug toolbar in prod
 MIDDLEWARE_CLASSES = (
@@ -114,40 +110,29 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
-        'error_file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/ureport/django.log',
-            'formatter': 'verbose'
-        },
         'null': {
             'level': 'DEBUG',
             'class': 'logging.NullHandler',
         },
     },
     'loggers': {
-        'django': {
-            'level': 'DEBUG',
-            'handlers': ['console', 'error_file'],
-            'propagate': False,
-        },
         'django.db.backends': {
             'level': 'ERROR',
-            'handlers': ['console', 'error_file'],
+            'handlers': ['console'],
             'propagate': False,
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['console', 'error_file'],
+            'handlers': ['console'],
             'propagate': False,
         },
         'sentry.errors': {
             'level': 'DEBUG',
-            'handlers': ['console', 'error_file'],
+            'handlers': ['console'],
             'propagate': False,
         },
         'django.security.DisallowedHost': {
-            'handlers': ['null', 'error_file'],
+            'handlers': ['null'],
             'propagate': False,
         },
     },

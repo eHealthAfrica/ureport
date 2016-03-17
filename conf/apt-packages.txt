@@ -17,4 +17,3 @@ libjpeg-dev
 gdal-bin
 nginx
 npm
-supervisor

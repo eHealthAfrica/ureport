@@ -11,7 +11,7 @@ ureport:
   volumes:
       - ./:/code
   environment:
-      ENV: "local"
+      ENV: "dev"
       RDS_HOSTNAME: "ureportdb"
       RDS_USERNAME: "postgres"
       RDS_PASSWORD: ""
@@ -23,6 +23,7 @@ ureport:
   command: start 
   ports:
     - "80:80"
+    - "8000:8000"
   links:
     - ureportdb
     - ureportredis

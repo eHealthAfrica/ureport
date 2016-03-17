@@ -61,3 +61,5 @@ xlwt==1.0.0
 django-extensions==1.5.9
 coveralls==1.1
 uwsgi==2.0.12
+# We install supervisor with pip because we need > 3.2 to be abel to pass in env variables
+supervisor==3.2.2

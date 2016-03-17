@@ -5,7 +5,7 @@
       "name": "ureport-app",
       "image": "387526361725.dkr.ecr.us-east-1.amazonaws.com/ureport:{{ tag }}",
       "essential": true,
-      "memory": 128,
+      "memory": 3000,
       "portMappings": [
         {
           "hostPort": 80,
@@ -22,8 +22,32 @@
           "value": "/var/www/static"
         },
         {
-            "name": "REDISHOST",
-            "value": "ureport-redis"
+          "name": "REDISHOST",
+          "value": "ureport-redis"
+        },
+        {
+          "name": "HOSTNAME",
+          "value": ""
+        },
+        {
+          "name": "RDS_HOSTNAME",
+          "value": ""
+        },
+        {
+          "name": "RDS_USERNAME",
+          "value": ""
+        },
+        {
+          "name": "RDS_PASSWORD",
+          "value": ""
+        },
+        {
+          "name": "RDS_PORT",
+          "value": ""
+        },
+        {
+          "name": "RDS_DB_NAME",
+          "value": ""
         }
       ],
       "links": [

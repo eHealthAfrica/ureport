@@ -1,34 +1,26 @@
-import os
-from fabric.api import env
+config = dict(
+    port='8025',
+    app_dir='ureport',
+    friendly_name='UReport',
+    repository='ssh://git@github.com/rapidpro/ureport.git',
+    domain='ureport.in',
+    name='ureport',
+    repo='ureport',
+    user='ureport',
+    env='env',
+    settings='settings.py.dev',
+    dbms='psql',
+    db='ureport',
+    custom_domains='*.ureport.in ureport.in *.ureport.staging.nyaruka.com',
+    prod_host='report1',
+    sqldump=False,
+    celery=True,
+    processes=('celery',),
 
-env.project_code = "ureport"
-env.require_tag = True
-
-
-def _configure(environment):
-    env.environment = environment
-    env.config_dir = "conf"
-    env.nginx_file_name = "nginx.ureport.conf"
-    env.nginx_file_path = os.path.join(env.config_dir, env.nginx_file_name)
-    env.nginx_template = "%(nginx_file_name)s.tmpl" % env
-    env.supervisor_file_path = os.path.join(
-        env.config_dir, "supervisor.ureport.conf")
-    env.hostname = "ureport-%(environment)s.elasticbeanstalk.com" % env
-    env.tag = os.environ.get("TRAVIS_TAG", "latest")
-
-    env.eb_extensions_dir = ".ebextensions/"
-    env.dockerrun_file_name = "Dockerrun.aws.json"
-    env.dockerrun_file_path = os.path.join(
-        env.config_dir, env.dockerrun_file_name)
-    env.dockerrun_template = "%(dockerrun_file_name)s.tmpl" % env
-    env.artifact_file_name = "deploy.zip"
-    env.artifact_file_path = os.path.join(
-        env.config_dir, env.artifact_file_name)
-
-
-def dev():
-    _configure("dev")
-
-
-def stage():
-    _configure("stage")
+    compress=True,
+    elb = dict(name='UReport',
+               region='eu-west-1',
+               primary='report1',
+               instances=[dict(name='report1', host='report1.ureport.in', id='i-5ccaec1f'),
+                          dict(name='report2', host='report2.ureport.in', id='i-e89fd8aa')])
+)
