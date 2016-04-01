@@ -13,7 +13,7 @@ def _configure(environment):
     env.nginx_template = "%(nginx_file_name)s.tmpl" % env
     env.supervisor_file_path = os.path.join(
         env.config_dir, "supervisor.ureport.conf")
-    env.hostname = "ureport-%(environment)s.elasticbeanstalk.com" % env
+    env.hostname = "ureport-%(environment)s.ehealthafrica.org" % env
     env.tag = os.environ.get("TRAVIS_TAG", "latest")
 
     env.eb_extensions_dir = ".ebextensions/"
@@ -24,11 +24,13 @@ def _configure(environment):
     env.artifact_file_name = "deploy.zip"
     env.artifact_file_path = os.path.join(
         env.config_dir, env.artifact_file_name)
-
-
-def dev():
-    _configure("dev")
+    env.rds_port = 5432
+    env.redishost = "ureport-redis"
 
 
 def stage():
     _configure("stage")
+    env.rds_hostname = "ureport-stage.cn8o6vqhux3j.eu-central-1.rds.amazonaws.com"
+    env.rds_db_name = "ureport_stage"
+    env.rds_username = "ureport_stage"
+    env.rds_password = ""

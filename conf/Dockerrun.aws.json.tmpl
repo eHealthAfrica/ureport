@@ -19,35 +19,35 @@
         },
         {
           "name": "STATIC_DIR",
-          "value": "/var/www/static"
+          "value": "{{ static_dir }}"
         },
         {
-          "name": "REDISHOST",
-          "value": "ureport-redis"
+            "name": "REDISHOST",
+            "value": "{{ redishost }}"
         },
         {
-          "name": "HOSTNAME",
-          "value": ""
+            "name": "HOSTNAME",
+            "value": "{{ hostname }}"
         },
         {
-          "name": "RDS_HOSTNAME",
-          "value": ""
+            "name": "RDS_HOSTNAME",
+            "value": "{{ rds_hostname }}"
         },
         {
-          "name": "RDS_USERNAME",
-          "value": ""
+            "name": "RDS_USERNAME",
+            "value": "{{ rds_username }}"
         },
         {
-          "name": "RDS_PASSWORD",
-          "value": ""
+            "name": "RDS_PASSWORD",
+            "value": "{{ rds_password }}"
         },
         {
-          "name": "RDS_PORT",
-          "value": ""
+            "name": "RDS_DB_NAME",
+            "value": "{{ rds_db_name }}"
         },
         {
-          "name": "RDS_DB_NAME",
-          "value": ""
+            "name": "RDS_PORT",
+            "value": "{{ rds_port }}"
         }
       ],
       "links": [

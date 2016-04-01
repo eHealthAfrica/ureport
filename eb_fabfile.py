@@ -1,9 +1,10 @@
 import os
+import htpasswd
 import zipfile
 
 from fabric.colors import green
 from fabric.api import local
-from eb_fabconfig import env, dev, stage  # noqa
+from eb_fabconfig import env, stage  # noqa
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -12,15 +13,26 @@ template_env = Environment(loader=loader)
 
 
 def prepare_deploy():
+    create_nginx_users_file()
     create_nginx_config()
     create_dockerrun_file()
     create_zip()
 
 
+def create_nginx_users_file():
+    local("touch %(nginx_users_file)s" % env)
+    with htpasswd.Basic(env.nginx_users_file) as user_db:
+        try:
+            user_db.add(env.basic_auth_username, env.basic_auth_password)
+        except htpasswd.basic.UserExists:
+            user_db.change_password(env.basic_auth_username,
+                                    env.basic_auth_password)
+
+
 def create_nginx_config():
     template = template_env.get_template(env.nginx_template)
     with open(env.nginx_file_path, "w") as file_handle:
-        data = template.render(hostname=env.hostname)
+        data = template.render(**env)
         file_handle.write(data)
     notify("Create %(nginx_file_path)s with hostname: %(hostname)s" % env)
 
@@ -28,11 +40,7 @@ def create_nginx_config():
 def create_dockerrun_file():
     template = template_env.get_template(env.dockerrun_template)
     with open(env.dockerrun_file_path, "w") as file_handle:
-        context = {
-            "tag": env.tag,
-            "environment": env.environment
-        }
-        data = template.render(**context)
+        data = template.render(**env)
         file_handle.write(data)
     notify("Create Dockerrun.aws.json with tag %s" % env.tag)
 
