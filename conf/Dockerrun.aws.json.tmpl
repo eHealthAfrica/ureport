@@ -5,21 +5,49 @@
       "name": "ureport-app",
       "image": "387526361725.dkr.ecr.us-east-1.amazonaws.com/ureport:{{ tag }}",
       "essential": true,
-      "memory": 128,
+      "memory": 3000,
       "portMappings": [
         {
           "hostPort": 80,
-          "containerPort": 4000
+          "containerPort": 80
         }
       ],
       "environment": [
         {
+          "name": "ENV",
+          "value": "{{ environment }}"
+        },
+        {
           "name": "STATIC_DIR",
-          "value": "/var/www/static"
+          "value": "{{ static_dir }}"
         },
         {
             "name": "REDISHOST",
-            "value": "ureport-redis"
+            "value": "{{ redishost }}"
+        },
+        {
+            "name": "HOSTNAME",
+            "value": "{{ hostname }}"
+        },
+        {
+            "name": "RDS_HOSTNAME",
+            "value": "{{ rds_hostname }}"
+        },
+        {
+            "name": "RDS_USERNAME",
+            "value": "{{ rds_username }}"
+        },
+        {
+            "name": "RDS_PASSWORD",
+            "value": "{{ rds_password }}"
+        },
+        {
+            "name": "RDS_DB_NAME",
+            "value": "{{ rds_db_name }}"
+        },
+        {
+            "name": "RDS_PORT",
+            "value": "{{ rds_port }}"
         }
       ],
       "links": [

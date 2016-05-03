@@ -87,6 +87,14 @@ celerybeat.pid
 celerybeat-schedule
 
 # Deploy
-conf/Dockerrun.aws.json
+*Dockerrun.aws.json
+conf/nginx_users
 conf/nginx.ureport.conf
 conf/deploy.zip
+eb_fabconfig.py
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+

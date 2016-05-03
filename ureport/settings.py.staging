@@ -30,7 +30,7 @@ MANAGERS = ADMINS
 INSTALLED_APPS = INSTALLED_APPS + ('gunicorn', 'raven.contrib.django.raven_compat',)
 
 RAVEN_CONFIG = {
-    'dsn': os.environ.get('RAVEN_DSN', 'MISSING_RAVEN_DSN')
+    'dsn': os.environ.get('RAVEN_DSN')
 }
 
 # static dir is different for staging
@@ -68,11 +68,11 @@ SITE_API_HOST = 'https://api.rapidpro.io'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DBNAME', 'ureport_staging'),
-        'USER': os.environ.get('DBUSER', 'ureport'),
-        'PASSWORD': os.environ.get('DBPASS', 'nyarukaglue'),
-        'HOST': os.environ.get('DBHOST', 'localhost'),
-        'PORT': os.environ.get('DBPORT', '5432'),
+        'NAME': os.environ.get('RDS_DB_NAME'),
+        'USER': os.environ.get('RDS_USERNAME'),
+        'PASSWORD': os.environ.get('RDS_PASSWORD'),
+        'HOST': os.environ.get('RDS_HOSTNAME'),
+        'PORT': os.environ.get('RDS_PORT'),
         'CONN_MAX_AGE': 60,
         'OPTIONS': {
         }
@@ -114,22 +114,42 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
-        }
+        },
+        'error_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/var/log/ureport/django.log',
+            'formatter': 'verbose'
+        },
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
     },
     'loggers': {
+        'django': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'error_file'],
+            'propagate': False,
+        },
+        'django.requests': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'error_file'],
+            'propagate': False,
+        },
         'django.db.backends': {
             'level': 'ERROR',
-            'handlers': ['console'],
+            'handlers': ['console', 'error_file'],
             'propagate': False,
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['console', 'error_file'],
             'propagate': False,
         },
         'sentry.errors': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['console', 'error_file'],
             'propagate': False,
         },
     },

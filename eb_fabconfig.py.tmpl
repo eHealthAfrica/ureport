@@ -1,0 +1,36 @@
+import os
+from fabric.api import env
+
+env.project_code = "ureport"
+env.require_tag = True
+
+
+def _configure(environment):
+    env.environment = environment
+    env.config_dir = "conf"
+    env.nginx_file_name = "nginx.ureport.conf"
+    env.nginx_file_path = os.path.join(env.config_dir, env.nginx_file_name)
+    env.nginx_template = "%(nginx_file_name)s.tmpl" % env
+    env.supervisor_file_path = os.path.join(
+        env.config_dir, "supervisor.ureport.conf")
+    env.hostname = "ureport-%(environment)s.ehealthafrica.org" % env
+    env.tag = os.environ.get("TRAVIS_TAG", "latest")
+
+    env.eb_extensions_dir = ".ebextensions/"
+    env.dockerrun_file_name = "Dockerrun.aws.json"
+    env.dockerrun_file_path = os.path.join(
+        env.config_dir, env.dockerrun_file_name)
+    env.dockerrun_template = "%(dockerrun_file_name)s.tmpl" % env
+    env.artifact_file_name = "deploy.zip"
+    env.artifact_file_path = os.path.join(
+        env.config_dir, env.artifact_file_name)
+    env.rds_port = 5432
+    env.redishost = "ureport-redis"
+
+
+def stage():
+    _configure("stage")
+    env.rds_hostname = "ureport-stage.cn8o6vqhux3j.eu-central-1.rds.amazonaws.com"
+    env.rds_db_name = "ureport_stage"
+    env.rds_username = "ureport_stage"
+    env.rds_password = ""

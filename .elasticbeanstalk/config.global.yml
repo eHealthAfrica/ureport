@@ -1,0 +1,9 @@
+branch-defaults:
+  default:
+    environment: ureport-stage
+  master:
+    environment: ureport-stage
+  develop:
+    environment: ureport-stage
+deploy:
+  artifact: "conf/deploy.zip"

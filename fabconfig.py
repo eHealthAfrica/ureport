@@ -1,4 +1,4 @@
-config = dict(    
+config = dict(
     port='8025',
     app_dir='ureport',
     friendly_name='UReport',

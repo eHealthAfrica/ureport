@@ -23,7 +23,7 @@ then
     docker tag -f ureport_ureport:latest 387526361725.dkr.ecr.us-east-1.amazonaws.com/ureport:$TAG
     docker push 387526361725.dkr.ecr.us-east-1.amazonaws.com/ureport:$TAG
 
-    fab -f fabdeployfile.py stage preparedeploy
+    fab -f eb_fabfile.py stage prepare_deploy
 
     # we never want our elastic beanstalk to use tag "latest" so if this is an
     # un-tagged build, use the commit hash
